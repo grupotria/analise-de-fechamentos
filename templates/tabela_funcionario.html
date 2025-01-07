@@ -1,0 +1,56 @@
+{% extends "template-header.html" %}
+{%block conteudo%}
+{% if session['id'] and session['funcao'] == "adm" %}
+<div class="position-relative">
+    <div id="deleteToast" class="toast" role="alert" aria-live="assertive" style="position: absolute; right: 50%; z-index: 10;"
+        aria-atomic="true">
+        <div class="toast-header bg-danger text-white">
+            <strong class="me-auto">Confirmação</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body bg-dark">
+            Deseja mesmo excluir este usuário?
+            <div class="mt-2 d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary btn-sm me-2" data-bs-dismiss="toast">Cancelar</button>
+                <button type="button" class="btn btn-danger btn-sm" id="confirmDeleteBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-center px-5">
+        <a href="{{url_for('dados_funcionario')}}" class="m-3">
+            <button class="btn btn-outline-primary">
+                Adicionar
+            </button>
+        </a>
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">função</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in lista_usuario %}
+                <tr>
+                    <th scope="row">{{usuario.id}}</th>
+                    <td>{{usuario.nome}}</td>
+                    <td>{{usuario.funcao}}</td>
+                    <td class="d-flex">
+                        <a href="{{url_for('dados_funcionario', id=usuario.id)}}"><button class="btn btn-outline-warning"><i
+                                    class="bi bi-pencil-square"></i></button></a>
+                        <a href="#" onclick="showDeleteToast('{{url_for('deletar_funcionario', id=usuario.id)}}')"
+                            class="ms-3"><button class="btn btn-outline-danger"><i
+                                    class="bi bi-trash3"></i></button></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="{{url_for('static', filename='js/confirmar_exclusao.js')}}"></script>
+{% endif %}
+{% endblock %}

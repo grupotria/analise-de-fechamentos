@@ -1,0 +1,69 @@
+{% extends "template-header.html" %}
+{%block conteudo%}
+{% if session['id'] and session['funcao'] == "adm" %}
+<form class="m-5"
+    action="{% if tem_user %}{{url_for('editar_funcionario')}}{% else %}{{url_for('cadastro_funcionario')}}{% endif %}"
+    method="post">
+
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome:</label>
+        <input type="text" id="nome" name="nome" class="form-control" required
+            value="{% if tem_user %}{{user.nome}}{% endif %}">
+    </div>
+    <div class="d-flex justify-content-center align-items-center mb-4">
+        {% if tem_user %}
+        <input type="hidden" name="id" value="{{user.id}}">
+        <div class="me-5 w-100">
+            <label for="senha" class="form-label">Nova senha:</label>
+            <input type="password" id="senha" name="senha" class="form-control">
+        </div>
+        <div class="w-100">
+            <label for="senhaConfirmar" class="form-label">Senha antiga para confirmação:</label>
+            <input type="password" id="senhaConfirmar" name="senhaConfirmar" class="form-control">
+        </div>
+        {% else %}
+        <div class="me-5 w-100">
+            <label for="senha" class="form-label">Senha:</label>
+            <input type="password" id="senha" name="senha" class="form-control" oninput="verificar_senha()" required>
+        </div>
+        <div class="w-100">
+            <label for="senhaConfirmar" class="form-label">Confirmar senha:</label>
+            <input type="password" id="senhaConfirmar" name="senhaConfirmar" class="form-control"
+                oninput="verificar_senha()" required>
+        </div>
+        {% endif %}
+    </div>
+    <div class="mb-5">
+        <select class="form-select" name="funcao" required>
+            <option value="vendedor(a)" {% if tem_user %} {% if user.funcao=="vendedor(a)" %} selected {% endif %} {%
+                endif %}>vendedor(a)</option>
+            <option value="Contador(a)" {% if tem_user %} {% if user.funcao=="Contador(a)" %} selected {% endif %} {% endif %}>Contador(a)
+            </option>
+            <option value="adm" {% if tem_user %} {% if user.funcao=="adm" %} selected {% endif %} {% endif %}>adm
+            </option>
+        </select>
+    </div>
+
+    <div class="d-flex justify-content-around align-items-center">
+        <input class="btn btn-outline-danger w-25" type="reset" value="Limpar campos">
+        <input class="btn btn-outline-primary w-25" type="submit" value="Confirmar">
+    </div>
+</form>
+{% if not tem_user %}
+<script type="text/javascript">
+    function verificar_senha() {
+        let senha = document.getElementById("senha");
+        let senhaConfirmar = document.getElementById("senhaConfirmar");
+
+        if (senha.value.length >= 6 && senha.value == senhaConfirmar.value) {
+            senha.className = "form-control is-valid";
+            senhaConfirmar.className = "form-control is-valid";
+        } else {
+            senha.className = "form-control is-invalid";
+            senhaConfirmar.className = "form-control is-invalid";
+        }
+    }
+</script>
+{%endif%}
+{%endif%}
+{% endblock %}
